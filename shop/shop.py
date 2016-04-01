@@ -1,10 +1,37 @@
 import logging
 
+
 class SymbolMeta(type):
     def __getattr__(cls, name):
         if name.startswith("__"):
             super(SymbolMeta, type).__getattr__(name)
         return cls(name=name)
+
+
+class DictCombiner(object):
+  def __repr__(self):
+    return "(%s + %s)" % (self.left, self.right)
+
+  def __init__(self, left, right):
+    self.left = left
+    self.right = right
+
+  def __call__(self, obj):
+    def merge(child, self_result):
+      child_result = child(obj)
+      if isinstance(child_result, dict):
+        return dict(self_result.items() + child_result.items())
+      else:
+        return dict(self_result.items() + [(child._path(), child_result)])
+
+    self_result = {}
+    self_result = merge(self.left, self_result)
+    self_result = merge(self.right, self_result)
+    return self_result
+
+  def __add__(self, other):
+    return DictCombiner(self, other)
+
 
 class k(object):
     __metaclass__ = SymbolMeta
@@ -40,15 +67,11 @@ class k(object):
             return self.prev._chain() + [self]
         else:
             return [self]
+
     def _path(self):
         chain = self._chain()
         names = [k_.name for k_ in chain]
         return "%s" % "_".join(names)
 
     def __add__(self, other):
-        raise NotImplementedError
-
-
-
-def d(*args):
-    return lambda o: { arg._path(): arg(o) for arg in args }
+        return DictCombiner(self, other)
