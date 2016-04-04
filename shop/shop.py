@@ -55,7 +55,11 @@ class k(object):
             res = obj
         logging.debug(str(self), res)
         if res is not None:
-            attr_or_none = getattr(res, self.name, None)
+            attr_or_none = None
+            if hasattr(res, 'get'):
+              attr_or_none = res.get(self.name)
+            if attr_or_none is None:
+              attr_or_none = getattr(res, self.name, None)
             if attr_or_none is None and hasattr(res, '__getitem__'):
                 attr_or_none = res.get(self.name, None)
             return attr_or_none
