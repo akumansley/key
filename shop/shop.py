@@ -1,11 +1,32 @@
 import logging
-
+import itertools
 
 class SymbolMeta(type):
     def __getattr__(cls, name):
         if name.startswith("__"):
             super(SymbolMeta, type).__getattr__(name)
         return cls(name=name)
+
+def flatmap(func, iterable):
+    return list(itertools.chain.from_iterable(map(func, iterable)))
+
+class FlatMap(object):
+    def __repr__(self):
+        return "(%s * %s)" % (self.left, self.right)
+
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
+
+    def __call__(self, obj):
+        ls = self.left(obj)
+        return flatmap(self.right, ls)
+
+    def __add__(self, other):
+        return DictCombiner(self, other)
+
+    def __mul__(self, other):
+        return FlatMap(self, other)
 
 
 class KResult(dict):
@@ -87,3 +108,6 @@ class k(object):
 
     def __add__(self, other):
         return DictCombiner(self, other)
+
+    def __mul__(self, other):
+        return FlatMap(self, other)
