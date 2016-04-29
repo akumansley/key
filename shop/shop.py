@@ -61,14 +61,7 @@ class k(object):
         if res is not None:
             if self.name == "_":
               return res
-            attr_or_none = None
-            if hasattr(res, 'get'):
-              try:
-                attr_or_none = res.get(self.name)
-              except AttributeError:
-                pass
-            if attr_or_none is None:
-              attr_or_none = getattr(res, self.name, None)
+            attr_or_none = getattr(res, self.name, None)
             if attr_or_none is None and hasattr(res, '__getitem__'):
                 attr_or_none = res.get(self.name, None)
             return attr_or_none
