@@ -8,6 +8,10 @@ class SymbolMeta(type):
         return cls(name=name)
 
 
+class KResult(dict):
+  pass
+
+
 class DictCombiner(object):
   def __repr__(self):
     return "(%s + %s)" % (self.left, self.right)
@@ -19,12 +23,12 @@ class DictCombiner(object):
   def __call__(self, obj):
     def merge(child, self_result):
       child_result = child(obj)
-      if isinstance(child_result, dict):
+      if isinstance(child_result, KResult):
         return dict(self_result.items() + child_result.items())
       else:
         return dict(self_result.items() + [(child._path(), child_result)])
 
-    self_result = {}
+    self_result = KResult()
     self_result = merge(self.left, self_result)
     self_result = merge(self.right, self_result)
     return self_result
@@ -58,6 +62,8 @@ class k(object):
             res = obj
         logging.debug(str(self), res)
         if res is not None:
+            if self.name == "_":
+              return res
             attr_or_none = getattr(res, str(self.name), None)
             if attr_or_none is None and hasattr(res, '__getitem__'):
                 try:

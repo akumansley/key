@@ -1,1 +1,1 @@
-from shop import k, d
+from shop import k
