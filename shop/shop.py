@@ -38,7 +38,7 @@ class k(object):
 
     def __repr__(self):
         chain = self._chain()
-        names = [k_.name for k_ in chain]
+        names = [str(k_.name) for k_ in chain]
         return "k<%s>" % ".".join(names)
 
     def __init__(self, name=None, prev=None):
@@ -48,6 +48,9 @@ class k(object):
     def __getattr__(self, name):
         return k(name=name, prev=self)
 
+    def __getitem__(self, idx):
+        return k(name=idx, prev=self)
+
     def __call__(self, obj):
         if self.prev:
             res = self.prev(obj)
@@ -55,9 +58,12 @@ class k(object):
             res = obj
         logging.debug(str(self), res)
         if res is not None:
-            attr_or_none = getattr(res, self.name, None)
+            attr_or_none = getattr(res, str(self.name), None)
             if attr_or_none is None and hasattr(res, '__getitem__'):
-                attr_or_none = res.get(self.name, None)
+                try:
+                    attr_or_none = res.__getitem__(self.name)
+                except IndexError, KeyError:
+                    pass
             return attr_or_none
         else:
             return res
@@ -70,7 +76,7 @@ class k(object):
 
     def _path(self):
         chain = self._chain()
-        names = [k_.name for k_ in chain]
+        names = [str(k_.name) for k_ in chain]
         return "%s" % "_".join(names)
 
     def __add__(self, other):
