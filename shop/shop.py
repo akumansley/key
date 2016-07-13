@@ -10,24 +10,6 @@ class SymbolMeta(type):
 def flatmap(func, iterable):
     return list(itertools.chain.from_iterable(map(func, iterable)))
 
-class FlatMap(object):
-    def __repr__(self):
-        return "(%s * %s)" % (self.left, self.right)
-
-    def __init__(self, left, right):
-        self.left = left
-        self.right = right
-
-    def __call__(self, obj):
-        ls = self.left(obj)
-        return flatmap(self.right, ls)
-
-    def __add__(self, other):
-        return DictCombiner(self, other)
-
-    def __mul__(self, other):
-        return FlatMap(self, other)
-
 
 class KResult(dict):
   pass
@@ -56,6 +38,12 @@ class DictCombiner(object):
 
   def __add__(self, other):
     return DictCombiner(self, other)
+
+  def __mul__(self, other):
+    return map(self, other)
+
+  def __pow__(self, other):
+    return flatmap(self, other)
 
 
 class k(object):
@@ -89,7 +77,7 @@ class k(object):
             if attr_or_none is None and hasattr(res, '__getitem__'):
                 try:
                     attr_or_none = res.__getitem__(self.name)
-                except IndexError, KeyError:
+                except (IndexError, KeyError):
                     pass
             return attr_or_none
         else:
@@ -110,4 +98,7 @@ class k(object):
         return DictCombiner(self, other)
 
     def __mul__(self, other):
-        return FlatMap(self, other)
+        return map(self, other)
+
+    def __pow__(self, other):
+        return flatmap(self, other)
