@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-  name="k",
+  name="key",
   version="0.1",
   description="Short getters for python",
   url="https://github.com/awans/k",
