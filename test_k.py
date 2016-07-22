@@ -1,4 +1,4 @@
-from shop import k
+import k
 
 
 class Obj(dict):

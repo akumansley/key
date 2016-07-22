@@ -1,12 +1,12 @@
 from setuptools import setup
 
 setup(
-  name="shop",
+  name="k",
   version="0.1",
-  description="Short operators for python",
-  url="https://github.com/awans/shop",
+  description="Short getters for python",
+  url="https://github.com/awans/k",
   author="Andrew Wansley",
   author_email="andrew.wansley@gmail.com",
   license="MIT",
-  packages=["shop"]
+  packages=["k"]
 )

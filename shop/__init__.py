@@ -1,1 +1,0 @@
-from shop import k

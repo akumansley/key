@@ -1,5 +1,6 @@
 import logging
 import itertools
+import sys
 
 
 class SymbolMeta(type):
