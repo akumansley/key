@@ -66,6 +66,7 @@ def test_addition_and_nesting():
   o.child = c
   assert (k.foo + k.child.foo)(o) == {'foo': 'bar', 'child_foo': 'bar'}
 
+
 def test_deep_addition_and_nesting():
   a, b, c = Obj(), Obj(), Obj()
   a.foo = 'bar'
@@ -75,6 +76,7 @@ def test_deep_addition_and_nesting():
   b.bar = 'quux'
   c.bar = 'quux'
   ls = [a, b, c]
+
   assert (k.foo + k.bar)(ls) == [{
     "foo": "bar",
     "bar": "qux",
@@ -85,6 +87,18 @@ def test_deep_addition_and_nesting():
     "foo": "baz",
     "bar": "quux",
   }]
+
+
+def test_not_combining_random_props():
+  a, b, c, d = Obj(), Obj(), Obj(), Obj()
+
+  a.foo = [b, c]
+  a.bar = [c, d]
+
+  assert (k.foo + k.bar)(a) == {
+    "foo": [b, c],
+    "bar": [c, d]
+  }
 
 
 def test_nested_list():
