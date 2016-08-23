@@ -2,9 +2,9 @@ from setuptools import setup
 
 setup(
   name="key",
-  version="0.1",
+  version="0.3",
   description="Short getters for python",
-  url="https://github.com/awans/k",
+  url="https://github.com/awans/key",
   author="Andrew Wansley",
   author_email="andrew.wansley@gmail.com",
   license="MIT",
