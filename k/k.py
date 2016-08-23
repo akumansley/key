@@ -1,6 +1,4 @@
-import logging
 import itertools
-import sys
 
 
 class SymbolMeta(type):
@@ -20,6 +18,22 @@ class KResult(dict):
 
 def flatmap(func, iterable):
   return list(itertools.chain.from_iterable(map(func, iterable)))
+
+
+def zipkeys(d):
+  # check if we have all lists of the same len
+  l = -1
+  for v in d.values():
+    if isinstance(v, list):
+      if l == -1:
+        l = len(v)
+      elif len(v) != l:
+        return d
+    else:
+      return d
+  # we do, so zip 'em
+  zipped = zip(*d.values())
+  return [dict(zip(d.keys(), z)) for z in zipped]
 
 
 class DictCombiner(object):
@@ -42,7 +56,8 @@ class DictCombiner(object):
     self_result = KResult()
     self_result = merge(self.left, self_result)
     self_result = merge(self.right, self_result)
-    return self_result
+    zipped = zipkeys(self_result)
+    return zipped
 
   def __add__(self, other):
     return DictCombiner(self, other)

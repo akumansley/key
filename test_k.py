@@ -66,6 +66,26 @@ def test_addition_and_nesting():
   o.child = c
   assert (k.foo + k.child.foo)(o) == {'foo': 'bar', 'child_foo': 'bar'}
 
+def test_deep_addition_and_nesting():
+  a, b, c = Obj(), Obj(), Obj()
+  a.foo = 'bar'
+  b.foo = 'bar'
+  c.foo = 'baz'
+  a.bar = 'qux'
+  b.bar = 'quux'
+  c.bar = 'quux'
+  ls = [a, b, c]
+  assert (k.foo + k.bar)(ls) == [{
+    "foo": "bar",
+    "bar": "qux",
+  }, {
+    "foo": "bar",
+    "bar": "quux",
+  }, {
+    "foo": "baz",
+    "bar": "quux",
+  }]
+
 
 def test_nested_list():
   o, a, b = Obj(), Obj(), Obj()
