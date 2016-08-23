@@ -4,7 +4,7 @@ import itertools
 class SymbolMeta(type):
 
   def __getattr__(cls, name):
-    if name.startswith("__"):
+    if name.startswith("__") and name != "__":
       super(SymbolMeta, type).__getattr__(name)
     return cls(name=name)
 
@@ -64,6 +64,8 @@ class k(object):
     return "k<%s>" % ".".join(names)
 
   def __init__(self, name=None, prev=None):
+    if name == "__":
+      name = "__dict__"
     self.name = name
     self.prev = prev
     self.flatten = None

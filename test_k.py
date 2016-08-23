@@ -101,6 +101,13 @@ def test_not_combining_random_props():
   }
 
 
+def test_dunderdict():
+  o = Obj()
+  o.foo = "bar"
+
+  assert k.__(o) == o.__dict__
+
+
 def test_nested_list():
   o, a, b = Obj(), Obj(), Obj()
   a.foo = 'bar'
