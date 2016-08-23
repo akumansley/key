@@ -31,3 +31,5 @@ You can combine two `k` instances with + and it will merge them into a dictionar
 `k._` will return 'self', which can be helpful when doing combinations.
 
 	user = k._ + k.coach.id(user)
+
+`k.__(o)` will return `o.__dict__`, which is also helpful for debugging.
