@@ -5,7 +5,7 @@ class SymbolMeta(type):
 
   def __getattr__(cls, name):
     if name.startswith("__") and name != "__":
-      super(SymbolMeta, type).__getattr__(name)
+      type.__getattr__(name)
     return cls(name=name)
 
   def __getitem__(cls, idx):
