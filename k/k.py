@@ -1,4 +1,5 @@
 import itertools
+from collections import defaultdict
 
 
 class SymbolMeta(type):
@@ -40,6 +41,13 @@ class DictCombiner(object):
       child_result = child(obj)
       if isinstance(child_result, KResult):
         return KResult(self_result.items() + child_result.items())
+      elif isinstance(child, DictCombiner):
+        unzipped = defaultdict(list)
+        for r in child_result:
+          for k, v in r.items():
+            unzipped[k].append(v)
+
+        return KResult(self_result.items() + unzipped.items())
       else:
         return KResult(self_result.items() + [(child._path(), child_result)])
 

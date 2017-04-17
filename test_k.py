@@ -89,6 +89,32 @@ def test_deep_addition_and_nesting():
   }]
 
 
+def test_multi_addition_and_nesting():
+  a, b, c = Obj(), Obj(), Obj()
+  a.foo, b.foo, c.foo = Obj(), Obj(), Obj()
+  a.bar, b.bar, c.bar = Obj(), Obj(), Obj()
+  a.baz, b.baz, c.baz = Obj(), Obj(), Obj()
+  for o in [a, b, c]:
+    o.foo.baz = "foobaz"
+    o.bar.baz = "barbaz"
+    o.baz.baz = "bazbaz"
+  ls = [a, b, c]
+
+  assert (k.foo.baz + k.bar.baz + k.baz.baz)(ls) == [{
+    "foo_baz": "foobaz",
+    "bar_baz": "barbaz",
+    "baz_baz": "bazbaz",
+  }, {
+    "foo_baz": "foobaz",
+    "bar_baz": "barbaz",
+    "baz_baz": "bazbaz",
+  }, {
+    "foo_baz": "foobaz",
+    "bar_baz": "barbaz",
+    "baz_baz": "bazbaz",
+  }]
+  
+
 def test_not_combining_random_props():
   a, b, c, d = Obj(), Obj(), Obj(), Obj()
 
